@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#000033"/>
+  
+  <!-- Pac-Man -->
+  <circle cx="200" cy="256" r="80" fill="#FFFF00"/>
+  <path d="M 200 176 A 80 80 0 0 1 200 336 L 200 256 Z" fill="#000033"/>
+  <circle cx="200" cy="226" r="8" fill="#000"/>
+  
+  <!-- Ghost -->
+  <ellipse cx="320" cy="256" rx="60" ry="70" fill="#FF0000"/>
+  <rect x="260" y="256" width="120" height="20" fill="#FF0000"/>
+  <path d="M 260 276 L 270 296 L 280 276 L 290 296 L 300 276 L 310 296 L 320 276 L 330 296 L 340 276 L 350 296 L 360 276 L 370 296 L 370 276 L 360 276" fill="#FF0000"/>
+  
+  <!-- Ghost Eyes -->
+  <circle cx="300" cy="236" r="12" fill="white"/>
+  <circle cx="340" cy="236" r="12" fill="white"/>
+  <circle cx="300" cy="236" r="6" fill="#0066ff"/>
+  <circle cx="340" cy="236" r="6" fill="#0066ff"/>
+  
+  <!-- Word "WORD" -->
+  <text x="256" y="380" font-family="Arial Black, sans-serif" font-size="48" font-weight="bold" fill="#00ff88" text-anchor="middle">WORD</text>
+  
+  <!-- Border -->
+  <rect x="10" y="10" width="492" height="492" fill="none" stroke="#0066ff" stroke-width="8" rx="20"/>
+</svg>

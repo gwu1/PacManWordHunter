@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <msapplication>
+        <tile>
+            <square70x70logo src="https://via.placeholder.com/70x70/000033/FFFF00?text=🎮"/>
+            <square150x150logo src="https://via.placeholder.com/150x150/000033/FFFF00?text=🎮"/>
+            <square310x310logo src="https://via.placeholder.com/310x310/000033/FFFF00?text=🎮"/>
+            <TileColor>#000033</TileColor>
+        </tile>
+    </msapplication>
+</browserconfig>
