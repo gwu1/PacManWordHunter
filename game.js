@@ -134,14 +134,18 @@ class GhostWordGame {
         
         // Mouse/Touch controls
         this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-        this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-        this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+        this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+        this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+        this.canvas.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+        this.canvas.addEventListener('touchcancel', (e) => this.handleTouchEnd(e), { passive: false });
         
-        // Prevent default touch behaviors on canvas
-        this.canvas.addEventListener('touchstart', (e) => e.preventDefault());
-        this.canvas.addEventListener('touchmove', (e) => e.preventDefault());
-        this.canvas.addEventListener('touchend', (e) => this.handleTouchEnd(e));
-        this.canvas.addEventListener('touchcancel', (e) => this.handleTouchEnd(e));
+        // Prevent default touch behaviors on canvas for iOS Safari
+        this.canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+        }, { passive: false });
+        this.canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        }, { passive: false });
         
         // Store touch position for continuous movement
         this.touchPosition = null;
@@ -213,8 +217,12 @@ class GhostWordGame {
         
         const rect = this.canvas.getBoundingClientRect();
         const touch = e.touches[0];
-        const touchX = touch.clientX - rect.left;
-        const touchY = touch.clientY - rect.top;
+        
+        // Calculate touch coordinates properly for iOS Safari
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
+        const touchX = (touch.clientX - rect.left) * scaleX;
+        const touchY = (touch.clientY - rect.top) * scaleY;
         
         // Store touch position for continuous movement
         this.touchPosition = { x: touchX, y: touchY };
@@ -229,8 +237,12 @@ class GhostWordGame {
         
         const rect = this.canvas.getBoundingClientRect();
         const touch = e.touches[0];
-        const touchX = touch.clientX - rect.left;
-        const touchY = touch.clientY - rect.top;
+        
+        // Calculate touch coordinates properly for iOS Safari
+        const scaleX = this.canvas.width / rect.width;
+        const scaleY = this.canvas.height / rect.height;
+        const touchX = (touch.clientX - rect.left) * scaleX;
+        const touchY = (touch.clientY - rect.top) * scaleY;
         
         // Update touch position
         this.touchPosition = { x: touchX, y: touchY };
@@ -1016,17 +1028,19 @@ class GhostWordGame {
     }
     
     displayVersion() {
-        // Hardcoded version info based on current commit
-        // This will be updated when we commit changes
+        // Updated version info based on current commit
         const versionInfo = {
             date: '2026-03-28',
-            hash: 'fa16e13',
-            shortHash: 'fa16e13'
+            hash: '006940e',
+            shortHash: '006940e'
         };
         
         // Format the version display
         const versionText = `v${versionInfo.date} (${versionInfo.shortHash})`;
-        document.getElementById('version').textContent = versionText;
+        const versionElement = document.getElementById('version');
+        if (versionElement) {
+            versionElement.textContent = versionText;
+        }
     }
     
     loadSettings() {
