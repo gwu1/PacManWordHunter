@@ -79,6 +79,74 @@ class GhostWordGame {
         this.setupCanvas();
         this.loadSettings();
         this.displayVersion();
+        this.setupPWAInstall();
+    }
+    
+    setupPWAInstall() {
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            window.deferredPrompt = e;
+            
+            // Show install button or prompt
+            this.showInstallButton();
+        });
+        
+        window.addEventListener('appinstalled', () => {
+            console.log('PWA was installed');
+            window.deferredPrompt = null;
+            this.hideInstallButton();
+        });
+    }
+    
+    showInstallButton() {
+        // Create install button if it doesn't exist
+        if (!document.getElementById('install-btn')) {
+            const installBtn = document.createElement('button');
+            installBtn.id = 'install-btn';
+            installBtn.className = 'control-btn install-btn';
+            installBtn.innerHTML = '📱 Install App';
+            installBtn.style.cssText = 'background: #4CAF50; margin-left: 10px;';
+            
+            const controlsDiv = document.querySelector('.game-controls');
+            if (controlsDiv) {
+                controlsDiv.appendChild(installBtn);
+                
+                installBtn.addEventListener('click', () => {
+                    this.installPWA();
+                });
+            }
+        }
+    }
+    
+    hideInstallButton() {
+        const installBtn = document.getElementById('install-btn');
+        if (installBtn) {
+            installBtn.remove();
+        }
+    }
+    
+    installPWA() {
+        const installBtn = document.getElementById('install-btn');
+        if (!installBtn) return;
+        
+        installBtn.disabled = true;
+        installBtn.innerHTML = '⏳ Installing...';
+        
+        // Trigger the install prompt
+        const beforeInstallPromptEvent = window.deferredPrompt;
+        if (beforeInstallPromptEvent) {
+            beforeInstallPromptEvent.prompt();
+            
+            beforeInstallPromptEvent.userChoice.then((choiceResult) => {
+                if (choiceResult.outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+                window.deferredPrompt = null;
+                this.hideInstallButton();
+            });
+        }
     }
     
     setupCanvas() {
@@ -1057,8 +1125,8 @@ class GhostWordGame {
         // Updated version info based on current commit
         const versionInfo = {
             date: '2026-03-28',
-            hash: '4ac8832',
-            shortHash: '4ac8832'
+            hash: '9d2b1c6',
+            shortHash: '9d2b1c6'
         };
         
         // Format the version display
