@@ -1099,7 +1099,7 @@ class GhostWordGame {
         // Show confirmation
         const wordSetNames = {
             'default': 'Default Words',
-            'personality': 'Personality Adjectives',
+            'personality': 'Describing people',
             'random': 'Random Mix'
         };
         alert(`Word set changed to: ${wordSetNames[wordSetType]}`);
@@ -1129,24 +1129,31 @@ class GhostWordGame {
                     break;
             }
         } else {
-            // Load custom words from localStorage (legacy)
-            const savedWords = localStorage.getItem('customWords');
-            if (savedWords) {
-                try {
-                    this.customWords = JSON.parse(savedWords);
+            // No saved selection, default to "Describing people"
+            const personalityRadio = document.querySelector('input[name="word-set"][value="personality"]');
+            if (personalityRadio) {
+                personalityRadio.checked = true;
+            }
+            this.currentWordSet = this.getPersonalityWords();
+            
+            // Save the default selection
+            localStorage.setItem('selectedWordSet', 'personality');
+        }
+        
+        // Load custom words from localStorage (legacy)
+        const savedWords = localStorage.getItem('customWords');
+        if (savedWords) {
+            try {
+                this.customWords = JSON.parse(savedWords);
+                // Only load custom words if no word set is selected
+                if (!selectedWordSet) {
                     this.currentWordSet = [...this.customWords];
-                    
                     // Update textarea
                     const textarea = document.getElementById('custom-words');
                     textarea.value = this.customWords.map(word => `${word.english}:${word.chinese}`).join('\n');
-                } catch (e) {
-                    console.error('Failed to load custom words:', e);
-                    // Fallback to default
-                    this.currentWordSet = this.getDefaultWords();
                 }
-            } else {
-                // Use default words
-                this.currentWordSet = this.getDefaultWords();
+            } catch (e) {
+                console.error('Failed to load custom words:', e);
             }
         }
     }
