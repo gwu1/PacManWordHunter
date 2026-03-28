@@ -66,6 +66,10 @@ class GhostWordGame {
         this.canvas.width = 800;
         this.canvas.height = 600;
         
+        // Make canvas responsive for mobile
+        this.resizeCanvas();
+        window.addEventListener('resize', () => this.resizeCanvas());
+        
         // Create player
         this.player = {
             x: this.canvas.width / 2,
@@ -76,6 +80,17 @@ class GhostWordGame {
             mouthAngle: 0,
             mouthDirection: 1
         };
+    }
+    
+    resizeCanvas() {
+        // Scale canvas for mobile devices
+        const maxWidth = window.innerWidth - 40;
+        const maxHeight = window.innerHeight - 200;
+        const scale = Math.min(maxWidth / 800, maxHeight / 600, 1);
+        
+        this.canvas.style.width = (800 * scale) + 'px';
+        this.canvas.style.height = (600 * scale) + 'px';
+        this.canvas.style.touchAction = 'none'; // Prevent browser touch actions
     }
     
     setupEventListeners() {
@@ -118,7 +133,17 @@ class GhostWordGame {
         
         // Mouse/Touch controls
         this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e));
         this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e));
+        
+        // Prevent default touch behaviors on canvas
+        this.canvas.addEventListener('touchstart', (e) => e.preventDefault());
+        this.canvas.addEventListener('touchmove', (e) => e.preventDefault());
+        this.canvas.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+        this.canvas.addEventListener('touchcancel', (e) => this.handleTouchEnd(e));
+        
+        // Store touch position for continuous movement
+        this.touchPosition = null;
     }
     
     handleKeyPress(e) {
@@ -181,6 +206,22 @@ class GhostWordGame {
         }
     }
     
+    handleTouchStart(e) {
+        e.preventDefault();
+        if (!this.gameRunning || this.gamePaused) return;
+        
+        const rect = this.canvas.getBoundingClientRect();
+        const touch = e.touches[0];
+        const touchX = touch.clientX - rect.left;
+        const touchY = touch.clientY - rect.top;
+        
+        // Store touch position for continuous movement
+        this.touchPosition = { x: touchX, y: touchY };
+        
+        // Move player immediately to touch position
+        this.movePlayerTowards(touchX, touchY);
+    }
+    
     handleTouchMove(e) {
         e.preventDefault();
         if (!this.gameRunning || this.gamePaused) return;
@@ -190,9 +231,17 @@ class GhostWordGame {
         const touchX = touch.clientX - rect.left;
         const touchY = touch.clientY - rect.top;
         
+        // Update touch position
+        this.touchPosition = { x: touchX, y: touchY };
+        
         // Move player towards touch position
-        const dx = touchX - this.player.x;
-        const dy = touchY - this.player.y;
+        this.movePlayerTowards(touchX, touchY);
+    }
+    
+    movePlayerTowards(targetX, targetY) {
+        // Move player towards target position
+        const dx = targetX - this.player.x;
+        const dy = targetY - this.player.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
         if (distance > 5) {
@@ -207,6 +256,12 @@ class GhostWordGame {
                 this.player.y = newY;
             }
         }
+    }
+    
+    handleTouchEnd(e) {
+        e.preventDefault();
+        // Clear touch position when touch ends
+        this.touchPosition = null;
     }
     
     startGameFromWelcome() {
