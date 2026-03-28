@@ -185,7 +185,6 @@ class GhostWordGame {
         // Game controls
         document.getElementById('start-btn').addEventListener('click', () => this.startGame());
         document.getElementById('welcome-start-btn').addEventListener('click', () => this.startGameFromWelcome());
-        document.getElementById('pause-btn').addEventListener('click', () => this.togglePause());
         document.getElementById('sound-toggle').addEventListener('click', () => this.toggleSound());
         document.getElementById('refresh-btn').addEventListener('click', () => this.refreshApp());
         
@@ -1125,8 +1124,8 @@ class GhostWordGame {
         // Updated version info based on current commit
         const versionInfo = {
             date: '2026-03-28',
-            hash: '9d2b1c6',
-            shortHash: '9d2b1c6'
+            hash: '9b7aa21',
+            shortHash: '9b7aa21'
         };
         
         // Format the version display
