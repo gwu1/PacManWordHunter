@@ -119,6 +119,7 @@ class GhostWordGame {
         document.getElementById('welcome-start-btn').addEventListener('click', () => this.startGameFromWelcome());
         document.getElementById('pause-btn').addEventListener('click', () => this.togglePause());
         document.getElementById('sound-toggle').addEventListener('click', () => this.toggleSound());
+        document.getElementById('refresh-btn').addEventListener('click', () => this.refreshApp());
         
         // Settings modal
         const modal = document.getElementById('settings-modal');
@@ -1056,8 +1057,8 @@ class GhostWordGame {
         // Updated version info based on current commit
         const versionInfo = {
             date: '2026-03-28',
-            hash: '2cf1422',
-            shortHash: '2cf1422'
+            hash: '44288e1',
+            shortHash: '44288e1'
         };
         
         // Format the version display
@@ -1103,6 +1104,29 @@ class GhostWordGame {
             'random': 'Random Mix'
         };
         alert(`Word set changed to: ${wordSetNames[wordSetType]}`);
+    }
+    
+    refreshApp() {
+        // Clear all caches and reload
+        if ('caches' in window) {
+            caches.keys().then(function(names) {
+                names.forEach(function(name) {
+                    caches.delete(name);
+                });
+            });
+        }
+        
+        // Unregister service workers
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister();
+                }
+            });
+        }
+        
+        // Force reload
+        window.location.reload(true);
     }
     
     loadSettings() {
