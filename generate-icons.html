@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate App Icons</title>
+</head>
+<body>
+    <canvas id="canvas" width="512" height="512" style="display:none;"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Draw icon
+        function drawIcon(size) {
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Background
+            ctx.fillStyle = '#000033';
+            ctx.fillRect(0, 0, size, size);
+            
+            // Scale factor
+            const scale = size / 512;
+            
+            // Pac-Man
+            ctx.fillStyle = '#FFFF00';
+            ctx.beginPath();
+            ctx.arc(200 * scale, 256 * scale, 80 * scale, 0.2 * Math.PI, 1.8 * Math.PI);
+            ctx.lineTo(200 * scale, 256 * scale);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Pac-Man eye
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(200 * scale, 226 * scale, 8 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Ghost body
+            ctx.fillStyle = '#FF0000';
+            ctx.beginPath();
+            ctx.ellipse(320 * scale, 256 * scale, 60 * scale, 70 * scale, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Ghost bottom
+            ctx.fillRect(260 * scale, 256 * scale, 120 * scale, 20 * scale);
+            
+            // Ghost waves
+            ctx.beginPath();
+            for(let i = 0; i < 6; i++) {
+                const x = 260 * scale + i * 20 * scale;
+                ctx.moveTo(x, 276 * scale);
+                ctx.lineTo(x + 10 * scale, 296 * scale);
+                ctx.lineTo(x + 20 * scale, 276 * scale);
+            }
+            ctx.fill();
+            
+            // Ghost eyes
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(300 * scale, 236 * scale, 12 * scale, 0, 2 * Math.PI);
+            ctx.arc(340 * scale, 236 * scale, 12 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            ctx.fillStyle = '#0066ff';
+            ctx.beginPath();
+            ctx.arc(300 * scale, 236 * scale, 6 * scale, 0, 2 * Math.PI);
+            ctx.arc(340 * scale, 236 * scale, 6 * scale, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // WORD text
+            if (size >= 192) {
+                ctx.fillStyle = '#00ff88';
+                ctx.font = `bold ${48 * scale}px Arial Black`;
+                ctx.textAlign = 'center';
+                ctx.fillText('WORD', 256 * scale, 380 * scale);
+            }
+            
+            // Border
+            ctx.strokeStyle = '#0066ff';
+            ctx.lineWidth = 8 * scale;
+            ctx.strokeRect(10 * scale, 10 * scale, (size - 20) * scale, (size - 20) * scale);
+        }
+        
+        // Generate and download icons
+        const sizes = [192, 512];
+        sizes.forEach(size => {
+            drawIcon(size);
+            canvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `icon-${size}x${size}.png`;
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        });
+        
+        setTimeout(() => {
+            document.body.innerHTML = '<h1>Icons downloaded! Check your downloads folder.</h1><p>Upload these to the icons/ directory in your project.</p>';
+        }, 1000);
+    </script>
+</body>
+</html>
