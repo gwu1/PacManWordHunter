@@ -1056,8 +1056,8 @@ class GhostWordGame {
         // Updated version info based on current commit
         const versionInfo = {
             date: '2026-03-28',
-            hash: '006940e',
-            shortHash: '006940e'
+            hash: 'a7b69a0',
+            shortHash: 'a7b69a0'
         };
         
         // Format the version display
