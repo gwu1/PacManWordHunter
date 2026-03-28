@@ -55,6 +55,25 @@ class GhostWordGame {
         ];
     }
     
+    getPersonalityWords() {
+        return [
+            { english: 'brave', chinese: '勇敢' },
+            { english: 'cheerful', chinese: '快樂' },
+            { english: 'funny', chinese: '有趣' },
+            { english: 'gentle', chinese: '溫柔' },
+            { english: 'honest', chinese: '誠實' },
+            { english: 'kind', chinese: '友善' },
+            { english: 'popular', chinese: '受歡迎' },
+            { english: 'smart', chinese: '聰明' }
+        ];
+    }
+    
+    getRandomMixWords() {
+        const defaultWords = this.getDefaultWords();
+        const personalityWords = this.getPersonalityWords();
+        return [...defaultWords, ...personalityWords];
+    }
+    
     init() {
         this.setupEventListeners();
         this.setupCanvas();
@@ -127,6 +146,12 @@ class GhostWordGame {
         document.getElementById('speech-toggle').addEventListener('change', (e) => {
             this.speechEnabled = e.target.checked;
             this.updateSpeech();
+        });
+        
+        // Word set selection
+        const wordSetRadios = document.querySelectorAll('input[name="word-set"]');
+        wordSetRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => this.selectWordSet(e.target.value));
         });
         
         // Keyboard controls
@@ -1043,19 +1068,85 @@ class GhostWordGame {
         }
     }
     
+    selectWordSet(wordSetType) {
+        let newWordSet;
+        
+        switch(wordSetType) {
+            case 'personality':
+                newWordSet = this.getPersonalityWords();
+                break;
+            case 'random':
+                newWordSet = this.getRandomMixWords();
+                break;
+            case 'default':
+            default:
+                newWordSet = this.getDefaultWords();
+                break;
+        }
+        
+        this.currentWordSet = [...newWordSet];
+        this.customWords = []; // Clear custom words when using preset
+        
+        // Save the selection
+        localStorage.setItem('selectedWordSet', wordSetType);
+        localStorage.removeItem('customWords');
+        
+        // If game is running, update the target word
+        if (this.gameRunning) {
+            this.selectNewTargetWord();
+        }
+        
+        // Show confirmation
+        const wordSetNames = {
+            'default': 'Default Words',
+            'personality': 'Personality Adjectives',
+            'random': 'Random Mix'
+        };
+        alert(`Word set changed to: ${wordSetNames[wordSetType]}`);
+    }
+    
     loadSettings() {
-        // Load custom words from localStorage
-        const savedWords = localStorage.getItem('customWords');
-        if (savedWords) {
-            try {
-                this.customWords = JSON.parse(savedWords);
-                this.currentWordSet = [...this.customWords];
-                
-                // Update textarea
-                const textarea = document.getElementById('custom-words');
-                textarea.value = this.customWords.map(word => `${word.english}:${word.chinese}`).join('\n');
-            } catch (e) {
-                console.error('Failed to load custom words:', e);
+        // Load selected word set
+        const selectedWordSet = localStorage.getItem('selectedWordSet');
+        if (selectedWordSet) {
+            // Set the radio button
+            const radio = document.querySelector(`input[name="word-set"][value="${selectedWordSet}"]`);
+            if (radio) {
+                radio.checked = true;
+            }
+            
+            // Load the appropriate word set
+            switch(selectedWordSet) {
+                case 'personality':
+                    this.currentWordSet = this.getPersonalityWords();
+                    break;
+                case 'random':
+                    this.currentWordSet = this.getRandomMixWords();
+                    break;
+                case 'default':
+                default:
+                    this.currentWordSet = this.getDefaultWords();
+                    break;
+            }
+        } else {
+            // Load custom words from localStorage (legacy)
+            const savedWords = localStorage.getItem('customWords');
+            if (savedWords) {
+                try {
+                    this.customWords = JSON.parse(savedWords);
+                    this.currentWordSet = [...this.customWords];
+                    
+                    // Update textarea
+                    const textarea = document.getElementById('custom-words');
+                    textarea.value = this.customWords.map(word => `${word.english}:${word.chinese}`).join('\n');
+                } catch (e) {
+                    console.error('Failed to load custom words:', e);
+                    // Fallback to default
+                    this.currentWordSet = this.getDefaultWords();
+                }
+            } else {
+                // Use default words
+                this.currentWordSet = this.getDefaultWords();
             }
         }
     }
