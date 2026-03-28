@@ -1,0 +1,495 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: #000;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.game-container {
+    background: #0a0a0a;
+    border: 3px solid #0066ff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 30px rgba(0, 102, 255, 0.5), inset 0 0 20px rgba(0, 102, 255, 0.2);
+    max-width: 900px;
+    width: 100%;
+}
+
+/* Header Styles */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(90deg, #0066ff, #00ccff);
+    border-radius: 10px;
+    color: #ffff00;
+    border: 2px solid #ffff00;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.score-display {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.settings-btn {
+    background: #ffff00;
+    border: 2px solid #ff6600;
+    color: #000;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.settings-btn:hover {
+    background: #ffcc00;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Word Banner Styles */
+.word-banner {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background: linear-gradient(90deg, #ff0066, #ff6600);
+    border-radius: 10px;
+    color: #ffff00;
+    border: 3px solid #ffff00;
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.5), inset 0 0 10px rgba(255, 0, 102, 0.3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.target-word {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.word-translation {
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+/* Game Area Styles */
+.game-area {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+#game-canvas {
+    border: 3px solid #0066ff;
+    border-radius: 10px;
+    background: #000033;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 50%, rgba(255, 0, 102, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 20%, rgba(255, 255, 0, 0.05) 0%, transparent 50%);
+    box-shadow: 
+        0 0 30px rgba(0, 102, 255, 0.5),
+        inset 0 0 20px rgba(0, 102, 255, 0.2),
+        inset 0 0 40px rgba(255, 0, 102, 0.1);
+    position: relative;
+}
+
+#game-canvas::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(90deg, transparent 48%, rgba(0, 102, 255, 0.1) 50%, transparent 52%),
+        linear-gradient(0deg, transparent 48%, rgba(0, 102, 255, 0.1) 50%, transparent 52%);
+    background-size: 40px 40px;
+    pointer-events: none;
+    border-radius: 7px;
+}
+
+/* Game Controls */
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.control-btn {
+    background: linear-gradient(135deg, #ffff00, #ff6600);
+    color: #000;
+    border: 2px solid #ff0066;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(255, 255, 0, 0.3), 0 0 10px rgba(255, 0, 102, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 255, 0, 0.5), 0 0 15px rgba(255, 0, 102, 0.3);
+    background: linear-gradient(135deg, #ffcc00, #ff3300);
+}
+
+.control-btn:active {
+    transform: translateY(0);
+}
+
+/* Special Start Button Styling */
+.start-btn {
+    background: linear-gradient(135deg, #00ff88, #00cc66);
+    color: #000;
+    border: 3px solid #00ffaa;
+    padding: 16px 32px;
+    border-radius: 30px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 
+        0 8px 25px rgba(0, 255, 136, 0.4),
+        0 0 20px rgba(0, 255, 170, 0.3),
+        inset 0 0 15px rgba(255, 255, 255, 0.2);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    animation: startButtonPulse 2s infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.start-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.start-btn:hover::before {
+    left: 100%;
+}
+
+.start-btn:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 
+        0 12px 35px rgba(0, 255, 136, 0.6),
+        0 0 30px rgba(0, 255, 170, 0.4),
+        inset 0 0 20px rgba(255, 255, 255, 0.3);
+    background: linear-gradient(135deg, #00ffaa, #00ff88);
+}
+
+.start-btn:active {
+    transform: translateY(-1px) scale(1.02);
+}
+
+@keyframes startButtonPulse {
+    0%, 100% { 
+        box-shadow: 
+            0 8px 25px rgba(0, 255, 136, 0.4),
+            0 0 20px rgba(0, 255, 170, 0.3),
+            inset 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+    50% { 
+        box-shadow: 
+            0 8px 25px rgba(0, 255, 136, 0.6),
+            0 0 25px rgba(0, 255, 170, 0.5),
+            inset 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+}
+
+/* Welcome Overlay Styles */
+.welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #000033, #000066, #000033);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    animation: welcomeFadeIn 0.5s ease;
+}
+
+@keyframes welcomeFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.welcome-content {
+    background: linear-gradient(135deg, #0a0a0a, #1a1a2e);
+    border: 3px solid #0066ff;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    max-width: 600px;
+    box-shadow: 
+        0 0 50px rgba(0, 102, 255, 0.5),
+        inset 0 0 30px rgba(0, 102, 255, 0.2);
+    color: #ffff00;
+    animation: welcomeSlideIn 0.5s ease;
+}
+
+@keyframes welcomeSlideIn {
+    from {
+        transform: translateY(-50px) scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.game-title {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-shadow: 
+        3px 3px 6px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(0, 102, 255, 0.5);
+    animation: titleGlow 2s infinite alternate;
+}
+
+@keyframes titleGlow {
+    from {
+        text-shadow: 
+            3px 3px 6px rgba(0, 0, 0, 0.8),
+            0 0 20px rgba(0, 102, 255, 0.5);
+    }
+    to {
+        text-shadow: 
+            3px 3px 6px rgba(0, 0, 0, 0.8),
+            0 0 30px rgba(0, 255, 170, 0.8);
+    }
+}
+
+.game-description {
+    font-size: 24px;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    color: #00ffaa;
+}
+
+.instructions {
+    background: rgba(0, 102, 255, 0.1);
+    border: 2px solid #0066ff;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    text-align: left;
+}
+
+.instructions p {
+    font-size: 18px;
+    margin-bottom: 15px;
+    color: #ffff00;
+}
+
+.instructions ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.instructions li {
+    font-size: 16px;
+    margin-bottom: 10px;
+    padding-left: 25px;
+    position: relative;
+    color: #ffffff;
+}
+
+.instructions li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #00ffaa;
+    font-weight: bold;
+}
+
+.welcome-overlay .start-btn {
+    margin: 0 auto;
+    display: block;
+    min-width: 200px;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #0a0a0a;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 0 40px rgba(0, 102, 255, 0.5), inset 0 0 20px rgba(0, 102, 255, 0.2);
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+    border: 3px solid #0066ff;
+    color: #ffff00;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.setting-section {
+    margin-bottom: 25px;
+}
+
+.setting-section h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+.setting-section p {
+    color: #666;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+#custom-words {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 14px;
+    font-family: monospace;
+    resize: vertical;
+    margin-bottom: 15px;
+}
+
+#custom-words:focus {
+    outline: none;
+    border-color: #4facfe;
+    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+}
+
+.save-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: all 0.3s ease;
+}
+
+.save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+}
+
+.setting-section label {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.setting-section input[type="checkbox"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* Ghost animations will be handled in JavaScript */
+.ghost {
+    transition: all 0.1s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-container {
+        padding: 15px;
+        margin: 10px;
+    }
+    
+    #game-canvas {
+        width: 100%;
+        height: auto;
+        max-width: 600px;
+    }
+    
+    .target-word {
+        font-size: 28px;
+    }
+    
+    .word-translation {
+        font-size: 20px;
+    }
+    
+    .control-btn {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}

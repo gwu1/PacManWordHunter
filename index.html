@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man Word Hunter - English Learning Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Header with score and settings -->
+        <header class="game-header">
+            <div class="score-display">
+                <span>Score: </span>
+                <span id="score">0</span>
+            </div>
+            <button id="settings-btn" class="settings-btn">⚙️ Settings</button>
+        </header>
+
+        <!-- Central banner display for target word -->
+        <div class="word-banner">
+            <div class="target-word" id="target-word">Loading...</div>
+            <div class="word-translation" id="word-translation">Loading...</div>
+        </div>
+
+        <!-- Game canvas -->
+        <main class="game-area">
+            <canvas id="game-canvas" width="800" height="600"></canvas>
+        </main>
+
+        <!-- Game controls -->
+        <div class="game-controls">
+            <button id="start-btn" class="start-btn">🎮 Start Game</button>
+            <button id="pause-btn" class="control-btn">⏸️ Pause</button>
+            <button id="sound-toggle" class="control-btn">🔊 Sound On</button>
+        </div>
+    </div>
+
+    <!-- Welcome Overlay -->
+    <div id="welcome-overlay" class="welcome-overlay">
+        <div class="welcome-content">
+            <h1 class="game-title">🎮 Pac-Man Word Hunter</h1>
+            <p class="game-description">Catch the ghost with the correct English word!</p>
+            <div class="instructions">
+                <p>🎯 <strong>How to Play:</strong></p>
+                <ul>
+                    <li>Listen to the word pronunciation</li>
+                    <li>Find the ghost with the matching word</li>
+                    <li>Use arrow keys, WASD, or mouse to move</li>
+                    <li>Catch the correct ghost to score points!</li>
+                </ul>
+            </div>
+            <button id="welcome-start-btn" class="start-btn">🎮 Start Game</button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Game Settings</h2>
+            
+            <div class="setting-section">
+                <h3>Custom Words</h3>
+                <p>Enter English words and their Chinese translations (one per line, format: word:translation)</p>
+                <textarea id="custom-words" rows="8" placeholder="Example:
+apple:蘋果
+banana:香蕉
+cat:貓
+dog:狗"></textarea>
+                <button id="save-words" class="save-btn">Save Words</button>
+                <button id="use-default" class="save-btn">Use Default Words</button>
+            </div>
+
+            <div class="setting-section">
+                <h3>Game Settings</h3>
+                <label>
+                    <input type="checkbox" id="music-toggle" checked> Background Music
+                </label>
+                <label>
+                    <input type="checkbox" id="speech-toggle" checked> Word Pronunciation
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="background-music" loop>
+        <source src="background-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script src="game.js"></script>
+</body>
+</html>
