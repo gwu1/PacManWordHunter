@@ -59,6 +59,7 @@ class GhostWordGame {
         this.setupEventListeners();
         this.setupCanvas();
         this.loadSettings();
+        this.displayVersion();
     }
     
     setupCanvas() {
@@ -1012,6 +1013,20 @@ class GhostWordGame {
         localStorage.removeItem('customWords');
         document.getElementById('custom-words').value = '';
         alert('Using default word set!');
+    }
+    
+    displayVersion() {
+        // Hardcoded version info based on current commit
+        // This will be updated when we commit changes
+        const versionInfo = {
+            date: '2026-03-28',
+            hash: 'fa16e13',
+            shortHash: 'fa16e13'
+        };
+        
+        // Format the version display
+        const versionText = `v${versionInfo.date} (${versionInfo.shortHash})`;
+        document.getElementById('version').textContent = versionText;
     }
     
     loadSettings() {
