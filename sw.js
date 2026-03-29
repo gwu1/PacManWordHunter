@@ -1,4 +1,4 @@
-const CACHE_NAME = 'pacman-word-hunter-v9d2b1c6';
+const CACHE_NAME = 'pacman-word-hunter-vbfc90a1';
 const urlsToCache = [
   '/PacManWordHunter/',
   '/PacManWordHunter/index.html',

@@ -171,14 +171,40 @@ class GhostWordGame {
     }
     
     resizeCanvas() {
-        // Scale canvas for mobile devices
-        const maxWidth = window.innerWidth - 40;
-        const maxHeight = window.innerHeight - 200;
-        const scale = Math.min(maxWidth / 800, maxHeight / 600, 1);
+        // Scale canvas for mobile devices and landscape orientation
+        const headerHeight = 180; // Approximate space needed for header, word banner, and controls
+        const padding = 40;
         
+        // Calculate available space
+        const availableWidth = window.innerWidth - padding;
+        const availableHeight = window.innerHeight - headerHeight;
+        
+        // Determine if we're in landscape mode on a mobile device
+        const isLandscape = window.innerWidth > window.innerHeight;
+        const isMobile = window.innerWidth <= 768 || window.innerHeight <= 500;
+        
+        let scale;
+        
+        if (isLandscape && isMobile) {
+            // In landscape mode on mobile, prioritize fitting the height
+            // and use a smaller scale to ensure everything fits
+            const heightScale = (availableHeight - 20) / 600;
+            const widthScale = availableWidth / 800;
+            scale = Math.min(heightScale, widthScale, 1);
+        } else {
+            // Portrait mode - use original logic
+            const maxWidth = availableWidth;
+            const maxHeight = availableHeight;
+            scale = Math.min(maxWidth / 800, maxHeight / 600, 1);
+        }
+        
+        // Apply the scale
         this.canvas.style.width = (800 * scale) + 'px';
         this.canvas.style.height = (600 * scale) + 'px';
         this.canvas.style.touchAction = 'none'; // Prevent browser touch actions
+        
+        // Store scale for coordinate calculations
+        this.canvasScale = scale;
     }
     
     setupEventListeners() {
@@ -1121,11 +1147,11 @@ class GhostWordGame {
     }
     
     displayVersion() {
-        // Updated version info based on current commit
+        // Auto-generated version info
         const versionInfo = {
             date: '2026-03-28',
-            hash: '9b7aa21',
-            shortHash: '9b7aa21'
+            hash: '895f1ce',
+            shortHash: '895f1ce'
         };
         
         // Format the version display
